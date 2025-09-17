@@ -25,6 +25,10 @@ public abstract class Usuario {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "Senha é obrigatória")
+    @Column(nullable = false)
+    private String senha;
+
     @NotBlank(message = "Telefone é obrigatório")
     @Column(nullable = false)
     private String telefone;
@@ -48,9 +52,10 @@ public abstract class Usuario {
     // Construtores
     public Usuario() {}
 
-    public Usuario(String nome, String email, String telefone, String endereco, String observacoes) {
+    public Usuario(String nome, String email, String senha, String telefone, String endereco, String observacoes) {
         this.nome = nome;
         this.email = email;
+        this.senha = senha;
         this.telefone = telefone;
         this.endereco = endereco;
         this.observacoes = observacoes;
@@ -81,6 +86,14 @@ public abstract class Usuario {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public String getTelefone() {

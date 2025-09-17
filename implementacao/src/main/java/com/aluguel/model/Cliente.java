@@ -34,9 +34,9 @@ public class Cliente extends Usuario {
         super();
     }
 
-    public Cliente(String nome, String email, String telefone, String endereco, String cpf, 
+    public Cliente(String nome, String email, String senha, String telefone, String endereco, String cpf,
                   String rg, String profissao, String empregadores, String rendimentos, String observacoes) {
-        super(nome, email, telefone, endereco, observacoes);
+        super(nome, email, senha, telefone, endereco, observacoes);
         this.cpf = cpf;
         this.rg = rg;
         this.profissao = profissao;

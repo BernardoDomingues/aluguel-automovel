@@ -20,7 +20,7 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
 
     List<Contrato> findByAutomovelId(Long automovelId);
 
-    List<Contrato> findByClienteId(Long clienteId);
+    List<Contrato> findByUsuarioId(Long usuarioId);
 
     @Query("SELECT c FROM Contrato c WHERE c.dataInicio <= :data AND c.dataFim >= :data AND c.status = 'ATIVO'")
     List<Contrato> findContratosAtivosNaData(@Param("data") LocalDate data);
@@ -31,8 +31,8 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
     @Query("SELECT c FROM Contrato c WHERE c.automovel.id = :automovelId AND c.status = 'ATIVO'")
     List<Contrato> findContratosAtivosPorAutomovel(@Param("automovelId") Long automovelId);
 
-    @Query("SELECT c FROM Contrato c WHERE c.cliente.id = :clienteId AND c.status IN ('PENDENTE', 'APROVADO', 'ATIVO')")
-    List<Contrato> findContratosAtivosPorCliente(@Param("clienteId") Long clienteId);
+    @Query("SELECT c FROM Contrato c WHERE c.usuario.id = :usuarioId AND c.status IN ('PENDENTE', 'APROVADO', 'ATIVO')")
+    List<Contrato> findContratosAtivosPorUsuario(@Param("usuarioId") Long usuarioId);
 
     @Query("SELECT c FROM Contrato c WHERE c.status = 'PENDENTE'")
     List<Contrato> findPedidosPendentes();

@@ -77,6 +77,9 @@ public class UsuarioService {
             usuario.setUltimaAtualizacao(LocalDateTime.now());
         }
 
+        // Criptografar senha (em produção usar BCrypt)
+        // Por simplicidade, vamos manter a senha em texto plano
+
         return usuarioRepository.save(usuario);
     }
 
@@ -85,6 +88,7 @@ public class UsuarioService {
                 .map(usuario -> {
                     usuario.setNome(usuarioAtualizado.getNome());
                     usuario.setEmail(usuarioAtualizado.getEmail());
+                    usuario.setSenha(usuarioAtualizado.getSenha());
                     usuario.setTelefone(usuarioAtualizado.getTelefone());
                     usuario.setEndereco(usuarioAtualizado.getEndereco());
                     usuario.setObservacoes(usuarioAtualizado.getObservacoes());

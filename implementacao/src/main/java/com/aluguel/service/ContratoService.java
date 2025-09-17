@@ -47,8 +47,8 @@ public class ContratoService {
         return contratoRepository.findByAutomovelId(automovelId);
     }
 
-    public List<Contrato> listarPorCliente(Long clienteId) {
-        return contratoRepository.findByClienteId(clienteId);
+    public List<Contrato> listarPorUsuario(Long usuarioId) {
+        return contratoRepository.findByUsuarioId(usuarioId);
     }
 
     public List<Contrato> listarPedidosPendentes() {

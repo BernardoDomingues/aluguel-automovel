@@ -77,12 +77,12 @@ public class ContratoController {
         return ResponseEntity.ok(contratos);
     }
 
-    @GetMapping("/cliente/{clienteId}")
-    @Operation(summary = "Listar contratos por cliente", description = "Retorna todos os contratos de um cliente específico")
-    @ApiResponse(responseCode = "200", description = "Lista de contratos do cliente")
-    public ResponseEntity<List<Contrato>> listarPorCliente(
-            @Parameter(description = "ID do cliente") @PathVariable Long clienteId) {
-        List<Contrato> contratos = contratoService.listarPorCliente(clienteId);
+    @GetMapping("/usuario/{usuarioId}")
+    @Operation(summary = "Listar contratos por usuário", description = "Retorna todos os contratos de um usuário específico")
+    @ApiResponse(responseCode = "200", description = "Lista de contratos do usuário")
+    public ResponseEntity<List<Contrato>> listarPorUsuario(
+            @Parameter(description = "ID do usuário") @PathVariable Long usuarioId) {
+        List<Contrato> contratos = contratoService.listarPorUsuario(usuarioId);
         return ResponseEntity.ok(contratos);
     }
 

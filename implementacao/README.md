@@ -120,6 +120,11 @@ http://localhost:8080/h2-console
 
 ## 📋 Endpoints da API
 
+### 🔐 Autenticação
+- `POST /api/auth/login` - Fazer login no sistema
+- `POST /api/auth/validate` - Validar token de autenticação
+- `POST /api/auth/logout` - Fazer logout do sistema
+
 ### 🚗 Automóveis
 - `GET /api/automoveis` - Listar todos os automóveis
 - `GET /api/automoveis/disponiveis` - Listar automóveis disponíveis
@@ -157,7 +162,7 @@ http://localhost:8080/h2-console
 - `GET /api/contratos/status/{status}` - Listar por status (PENDENTE, APROVADO, REJEITADO, ATIVO, FINALIZADO, CANCELADO)
 - `GET /api/contratos/tipo/{tipoContrato}` - Listar por tipo (ALUGUEL, CREDITO)
 - `GET /api/contratos/automovel/{automovelId}` - Listar por automóvel
-- `GET /api/contratos/cliente/{clienteId}` - Listar por cliente
+- `GET /api/contratos/usuario/{usuarioId}` - Listar por usuário
 - `GET /api/contratos/pendentes` - Listar pedidos pendentes
 - `GET /api/contratos/ativos-na-data?data=YYYY-MM-DD` - Listar ativos em uma data
 - `GET /api/contratos/vencidos` - Listar contratos vencidos
@@ -185,6 +190,31 @@ http://localhost:8080/h2-console
 
 ### 3. Exemplo de Dados para Teste
 
+#### Fazer Login:
+```json
+{
+  "email": "joao@email.com",
+  "senha": "123456"
+}
+```
+
+#### Criar um Cliente (com senha):
+```json
+{
+  "nome": "João Silva",
+  "email": "joao@email.com",
+  "senha": "123456",
+  "cpf": "123.456.789-00",
+  "rg": "12.345.678-9",
+  "endereco": "Rua das Flores, 123",
+  "telefone": "(11) 99999-9999",
+  "profissao": "Engenheiro",
+  "empregadores": "Empresa ABC Ltda",
+  "rendimentos": "Salário: R$ 5.000,00",
+  "observacoes": "Cliente responsável"
+}
+```
+
 #### Criar um Automóvel:
 ```json
 {
@@ -200,7 +230,7 @@ http://localhost:8080/h2-console
 }
 ```
 
-#### Criar um Cliente:
+#### Criar um Cliente (exemplo antigo - sem senha):
 ```json
 {
   "nome": "João Silva",

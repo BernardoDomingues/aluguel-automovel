@@ -60,11 +60,11 @@ public abstract class Agente extends Usuario {
         super();
     }
 
-    public Agente(String nome, String email, String telefone, String endereco, String cnpj, 
+    public Agente(String nome, String email, String senha, String telefone, String endereco, String cnpj, 
                   String razaoSocial, String nomeFantasia, String responsavelLegal, 
                   String cpfResponsavel, String telefoneComercial, String emailComercial, 
                   String areaAtuacao, String observacoes) {
-        super(nome, email, telefone, endereco, observacoes);
+        super(nome, email, senha, telefone, endereco, observacoes);
         this.cnpj = cnpj;
         this.razaoSocial = razaoSocial;
         this.nomeFantasia = nomeFantasia;

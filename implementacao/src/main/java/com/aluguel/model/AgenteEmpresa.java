@@ -65,11 +65,11 @@ public class AgenteEmpresa extends Agente {
         super();
     }
 
-    public AgenteEmpresa(String nome, String email, String telefone, String endereco, String cnpj, 
+    public AgenteEmpresa(String nome, String email, String senha, String telefone, String endereco, String cnpj, 
                          String razaoSocial, String nomeFantasia, String responsavelLegal, 
                          String cpfResponsavel, String telefoneComercial, String emailComercial, 
                          String areaAtuacao, String segmentoAtuacao, String observacoes) {
-        super(nome, email, telefone, endereco, cnpj, razaoSocial, nomeFantasia, responsavelLegal, 
+        super(nome, email, senha, telefone, endereco, cnpj, razaoSocial, nomeFantasia, responsavelLegal, 
               cpfResponsavel, telefoneComercial, emailComercial, areaAtuacao, observacoes);
         this.segmentoAtuacao = segmentoAtuacao;
         this.ativoOperacoes = true;
