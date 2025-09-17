@@ -20,9 +20,9 @@ public class Contrato {
     private Automovel automovel;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id", nullable = false)
-    @NotNull(message = "Cliente é obrigatório")
-    private Cliente cliente;
+    @JoinColumn(name = "usuario_id", nullable = false)
+    @NotNull(message = "Usuário é obrigatório")
+    private Usuario usuario;
 
     @NotNull(message = "Data de início é obrigatória")
     @Column(nullable = false)
@@ -47,6 +47,26 @@ public class Contrato {
     @Column(nullable = false)
     private TipoContrato tipoContrato = TipoContrato.ALUGUEL;
 
+    // Campos para análise financeira
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agente_analisador_id")
+    private Agente agenteAnalisador;
+
+    @Column(name = "parecer_financeiro", columnDefinition = "TEXT")
+    private String parecerFinanceiro;
+
+    @Column(name = "score_credito")
+    private Integer scoreCredito;
+
+    @Column(name = "data_analise")
+    private LocalDate dataAnalise;
+
+    @Column(name = "observacoes_analise", columnDefinition = "TEXT")
+    private String observacoesAnalise;
+
+    @Column(name = "documentos_anexos", columnDefinition = "TEXT")
+    private String documentosAnexos;
+
     public enum StatusContrato {
         PENDENTE, APROVADO, REJEITADO, ATIVO, FINALIZADO, CANCELADO
     }
@@ -58,11 +78,11 @@ public class Contrato {
     // Construtores
     public Contrato() {}
 
-    public Contrato(Long id, Automovel automovel, Cliente cliente, LocalDate dataInicio, LocalDate dataFim, 
+    public Contrato(Long id, Automovel automovel, Usuario usuario, LocalDate dataInicio, LocalDate dataFim, 
                    BigDecimal valorAluguel, String observacoes, StatusContrato status, TipoContrato tipoContrato) {
         this.id = id;
         this.automovel = automovel;
-        this.cliente = cliente;
+        this.usuario = usuario;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.valorAluguel = valorAluguel;
@@ -88,12 +108,12 @@ public class Contrato {
         this.automovel = automovel;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public LocalDate getDataInicio() {
@@ -142,5 +162,54 @@ public class Contrato {
 
     public void setTipoContrato(TipoContrato tipoContrato) {
         this.tipoContrato = tipoContrato;
+    }
+
+    // Getters e Setters para análise financeira
+    public Agente getAgenteAnalisador() {
+        return agenteAnalisador;
+    }
+
+    public void setAgenteAnalisador(Agente agenteAnalisador) {
+        this.agenteAnalisador = agenteAnalisador;
+    }
+
+    public String getParecerFinanceiro() {
+        return parecerFinanceiro;
+    }
+
+    public void setParecerFinanceiro(String parecerFinanceiro) {
+        this.parecerFinanceiro = parecerFinanceiro;
+    }
+
+    public Integer getScoreCredito() {
+        return scoreCredito;
+    }
+
+    public void setScoreCredito(Integer scoreCredito) {
+        this.scoreCredito = scoreCredito;
+    }
+
+    public LocalDate getDataAnalise() {
+        return dataAnalise;
+    }
+
+    public void setDataAnalise(LocalDate dataAnalise) {
+        this.dataAnalise = dataAnalise;
+    }
+
+    public String getObservacoesAnalise() {
+        return observacoesAnalise;
+    }
+
+    public void setObservacoesAnalise(String observacoesAnalise) {
+        this.observacoesAnalise = observacoesAnalise;
+    }
+
+    public String getDocumentosAnexos() {
+        return documentosAnexos;
+    }
+
+    public void setDocumentosAnexos(String documentosAnexos) {
+        this.documentosAnexos = documentosAnexos;
     }
 }

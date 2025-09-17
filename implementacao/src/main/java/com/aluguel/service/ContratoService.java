@@ -4,7 +4,7 @@ import com.aluguel.model.Contrato;
 import com.aluguel.model.Contrato.StatusContrato;
 import com.aluguel.model.Contrato.TipoContrato;
 import com.aluguel.model.Automovel;
-import com.aluguel.model.Cliente;
+import com.aluguel.model.Usuario;
 import com.aluguel.repository.ContratoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +19,12 @@ public class ContratoService {
 
     private final ContratoRepository contratoRepository;
     private final AutomovelService automovelService;
-    private final ClienteService clienteService;
+    private final UsuarioService usuarioService;
 
-    public ContratoService(ContratoRepository contratoRepository, AutomovelService automovelService, ClienteService clienteService) {
+    public ContratoService(ContratoRepository contratoRepository, AutomovelService automovelService, UsuarioService usuarioService) {
         this.contratoRepository = contratoRepository;
         this.automovelService = automovelService;
-        this.clienteService = clienteService;
+        this.usuarioService = usuarioService;
     }
 
     public List<Contrato> listarTodos() {
@@ -68,9 +68,9 @@ public class ContratoService {
         Automovel automovel = automovelService.buscarPorId(contrato.getAutomovel().getId())
                 .orElseThrow(() -> new RuntimeException("Automóvel não encontrado com ID: " + contrato.getAutomovel().getId()));
 
-        // Validar se o cliente existe
-        Cliente cliente = clienteService.buscarPorId(contrato.getCliente().getId())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado com ID: " + contrato.getCliente().getId()));
+        // Validar se o usuário existe
+        Usuario usuario = usuarioService.buscarPorId(contrato.getUsuario().getId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + contrato.getUsuario().getId()));
 
         // Verificar se o automóvel está disponível
         if (!automovel.getDisponivel()) {
@@ -89,7 +89,7 @@ public class ContratoService {
         // Definir o valor do aluguel baseado no automóvel
         contrato.setValorAluguel(automovel.getValorAluguel());
         contrato.setAutomovel(automovel);
-        contrato.setCliente(cliente);
+        contrato.setUsuario(usuario);
         contrato.setStatus(StatusContrato.PENDENTE);
         contrato.setTipoContrato(TipoContrato.ALUGUEL);
 

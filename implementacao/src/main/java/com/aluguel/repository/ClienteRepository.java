@@ -12,24 +12,58 @@ import java.util.Optional;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
+    // Buscar por CPF
     Optional<Cliente> findByCpf(String cpf);
 
-    Optional<Cliente> findByEmail(String email);
-
+    // Buscar por RG
     Optional<Cliente> findByRg(String rg);
 
-    @Query("SELECT c FROM Cliente c WHERE c.nome LIKE %:nome%")
-    List<Cliente> findByNomeContaining(@Param("nome") String nome);
+    // Buscar por profissão (contém)
+    List<Cliente> findByProfissaoContainingIgnoreCase(String profissao);
 
-    @Query("SELECT c FROM Cliente c WHERE c.profissao LIKE %:profissao%")
-    List<Cliente> findByProfissaoContaining(@Param("profissao") String profissao);
+    // Buscar por nome (contém)
+    List<Cliente> findByNomeContainingIgnoreCase(String nome);
 
-    @Query("SELECT c FROM Cliente c WHERE c.endereco LIKE %:endereco%")
-    List<Cliente> findByEnderecoContaining(@Param("endereco") String endereco);
+    // Buscar por email
+    Optional<Cliente> findByEmail(String email);
 
-    boolean existsByCpf(String cpf);
+    // Buscar por telefone
+    Optional<Cliente> findByTelefone(String telefone);
 
-    boolean existsByEmail(String email);
+    // Buscar por endereço (contém)
+    List<Cliente> findByEnderecoContainingIgnoreCase(String endereco);
 
-    boolean existsByRg(String rg);
+    // Buscar clientes ativos
+    List<Cliente> findByAtivoTrue();
+
+    // Buscar clientes inativos
+    List<Cliente> findByAtivoFalse();
+
+    // Verificar se CPF já existe (excluindo um ID específico)
+    @Query("SELECT COUNT(c) > 0 FROM Cliente c WHERE c.cpf = :cpf AND c.id != :id")
+    boolean existsByCpfAndIdNot(@Param("cpf") String cpf, @Param("id") Long id);
+
+    // Verificar se RG já existe (excluindo um ID específico)
+    @Query("SELECT COUNT(c) > 0 FROM Cliente c WHERE c.rg = :rg AND c.id != :id")
+    boolean existsByRgAndIdNot(@Param("rg") String rg, @Param("id") Long id);
+
+    // Verificar se email já existe (excluindo um ID específico)
+    @Query("SELECT COUNT(c) > 0 FROM Cliente c WHERE c.email = :email AND c.id != :id")
+    boolean existsByEmailAndIdNot(@Param("email") String email, @Param("id") Long id);
+
+    // Buscar clientes com rendimentos acima de um valor
+    @Query("SELECT c FROM Cliente c WHERE c.rendimentos IS NOT NULL AND c.rendimentos != ''")
+    List<Cliente> findWithRendimentos();
+
+    // Buscar clientes com empregadores
+    @Query("SELECT c FROM Cliente c WHERE c.empregadores IS NOT NULL AND c.empregadores != ''")
+    List<Cliente> findWithEmpregadores();
+
+    // Contar clientes ativos
+    Long countByAtivoTrue();
+
+    // Buscar clientes cadastrados em um período
+    @Query("SELECT c FROM Cliente c WHERE c.dataCadastro BETWEEN :dataInicio AND :dataFim")
+    List<Cliente> findByDataCadastroBetween(@Param("dataInicio") java.time.LocalDateTime dataInicio, 
+                                           @Param("dataFim") java.time.LocalDateTime dataFim);
 }
