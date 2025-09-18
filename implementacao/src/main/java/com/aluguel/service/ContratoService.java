@@ -39,55 +39,32 @@ public class ContratoService {
         return contratoRepository.findByStatus(status);
     }
 
-    public List<Contrato> listarPorTipoContrato(TipoContrato tipoContrato) {
-        return contratoRepository.findByTipoContrato(tipoContrato);
-    }
-
-    public List<Contrato> listarPorAutomovel(Long automovelId) {
-        return contratoRepository.findByAutomovelId(automovelId);
-    }
-
-    public List<Contrato> listarPorUsuario(Long usuarioId) {
-        return contratoRepository.findByUsuarioId(usuarioId);
-    }
 
     public List<Contrato> listarPedidosPendentes() {
         return contratoRepository.findPedidosPendentes();
     }
 
-    public List<Contrato> listarContratosAtivosNaData(LocalDate data) {
-        return contratoRepository.findContratosAtivosNaData(data);
-    }
-
-    public List<Contrato> listarContratosVencidos() {
-        return contratoRepository.findContratosVencidos(LocalDate.now());
-    }
 
     public Contrato criarPedidoAluguel(Contrato contrato) {
-        // Validar se o automóvel existe
         Automovel automovel = automovelService.buscarPorId(contrato.getAutomovel().getId())
                 .orElseThrow(() -> new RuntimeException("Automóvel não encontrado com ID: " + contrato.getAutomovel().getId()));
 
-        // Validar se o usuário existe
         Usuario usuario = usuarioService.buscarPorId(contrato.getUsuario().getId())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + contrato.getUsuario().getId()));
 
-        // Verificar se o automóvel está disponível
         if (!automovel.getDisponivel()) {
             throw new RuntimeException("Automóvel não está disponível para locação");
         }
 
-        // Verificar se há conflito de datas com contratos ativos
-        List<Contrato> contratosAtivos = contratoRepository.findContratosAtivosPorAutomovel(automovel.getId());
+        List<Contrato> contratosAtivos = contratoRepository.findByStatus(StatusContrato.ATIVO);
         for (Contrato contratoAtivo : contratosAtivos) {
-            if (datasConflitantes(contrato.getDataInicio(), contrato.getDataFim(),
+            if (contratoAtivo.getAutomovel().getId().equals(automovel.getId()) &&
+                datasConflitantes(contrato.getDataInicio(), contrato.getDataFim(),
                     contratoAtivo.getDataInicio(), contratoAtivo.getDataFim())) {
                 throw new RuntimeException("Já existe um contrato ativo para este automóvel no período especificado");
             }
         }
 
-        // Definir o valor do aluguel baseado no automóvel
-        contrato.setValorAluguel(automovel.getValorAluguel());
         contrato.setAutomovel(automovel);
         contrato.setUsuario(usuario);
         contrato.setStatus(StatusContrato.PENDENTE);
@@ -101,7 +78,6 @@ public class ContratoService {
                 .map(contrato -> {
                     contrato.setDataInicio(contratoAtualizado.getDataInicio());
                     contrato.setDataFim(contratoAtualizado.getDataFim());
-                    contrato.setValorAluguel(contratoAtualizado.getValorAluguel());
                     contrato.setObservacoes(contratoAtualizado.getObservacoes());
                     contrato.setStatus(contratoAtualizado.getStatus());
                     contrato.setTipoContrato(contratoAtualizado.getTipoContrato());
@@ -143,7 +119,6 @@ public class ContratoService {
                             contrato.setStatus(StatusContrato.ATIVO);
                             contratoRepository.save(contrato);
                             
-                            // Marcar automóvel como indisponível
                             automovelService.marcarComoIndisponivel(contrato.getAutomovel().getId());
                         },
                         () -> {
@@ -159,7 +134,6 @@ public class ContratoService {
                             contrato.setStatus(StatusContrato.FINALIZADO);
                             contratoRepository.save(contrato);
                             
-                            // Marcar automóvel como disponível novamente
                             automovelService.marcarComoDisponivel(contrato.getAutomovel().getId());
                         },
                         () -> {
@@ -175,7 +149,6 @@ public class ContratoService {
                             contrato.setStatus(StatusContrato.CANCELADO);
                             contratoRepository.save(contrato);
                             
-                            // Marcar automóvel como disponível novamente
                             automovelService.marcarComoDisponivel(contrato.getAutomovel().getId());
                         },
                         () -> {

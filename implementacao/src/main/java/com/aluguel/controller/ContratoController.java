@@ -2,7 +2,6 @@ package com.aluguel.controller;
 
 import com.aluguel.model.Contrato;
 import com.aluguel.model.Contrato.StatusContrato;
-import com.aluguel.model.Contrato.TipoContrato;
 import com.aluguel.service.ContratoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,12 +9,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -59,55 +56,11 @@ public class ContratoController {
         return ResponseEntity.ok(contratos);
     }
 
-    @GetMapping("/tipo/{tipoContrato}")
-    @Operation(summary = "Listar contratos por tipo", description = "Retorna contratos filtrados por tipo (ALUGUEL, CREDITO)")
-    @ApiResponse(responseCode = "200", description = "Lista de contratos do tipo especificado")
-    public ResponseEntity<List<Contrato>> listarPorTipoContrato(
-            @Parameter(description = "Tipo do contrato") @PathVariable TipoContrato tipoContrato) {
-        List<Contrato> contratos = contratoService.listarPorTipoContrato(tipoContrato);
-        return ResponseEntity.ok(contratos);
-    }
-
-    @GetMapping("/automovel/{automovelId}")
-    @Operation(summary = "Listar contratos por automóvel", description = "Retorna todos os contratos de um automóvel específico")
-    @ApiResponse(responseCode = "200", description = "Lista de contratos do automóvel")
-    public ResponseEntity<List<Contrato>> listarPorAutomovel(
-            @Parameter(description = "ID do automóvel") @PathVariable Long automovelId) {
-        List<Contrato> contratos = contratoService.listarPorAutomovel(automovelId);
-        return ResponseEntity.ok(contratos);
-    }
-
-    @GetMapping("/usuario/{usuarioId}")
-    @Operation(summary = "Listar contratos por usuário", description = "Retorna todos os contratos de um usuário específico")
-    @ApiResponse(responseCode = "200", description = "Lista de contratos do usuário")
-    public ResponseEntity<List<Contrato>> listarPorUsuario(
-            @Parameter(description = "ID do usuário") @PathVariable Long usuarioId) {
-        List<Contrato> contratos = contratoService.listarPorUsuario(usuarioId);
-        return ResponseEntity.ok(contratos);
-    }
-
     @GetMapping("/pendentes")
     @Operation(summary = "Listar pedidos pendentes", description = "Retorna todos os pedidos de aluguel pendentes de aprovação")
     @ApiResponse(responseCode = "200", description = "Lista de pedidos pendentes")
     public ResponseEntity<List<Contrato>> listarPedidosPendentes() {
         List<Contrato> contratos = contratoService.listarPedidosPendentes();
-        return ResponseEntity.ok(contratos);
-    }
-
-    @GetMapping("/ativos-na-data")
-    @Operation(summary = "Listar contratos ativos em uma data", description = "Retorna contratos ativos em uma data específica")
-    @ApiResponse(responseCode = "200", description = "Lista de contratos ativos na data")
-    public ResponseEntity<List<Contrato>> listarContratosAtivosNaData(
-            @Parameter(description = "Data para consulta") @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data) {
-        List<Contrato> contratos = contratoService.listarContratosAtivosNaData(data);
-        return ResponseEntity.ok(contratos);
-    }
-
-    @GetMapping("/vencidos")
-    @Operation(summary = "Listar contratos vencidos", description = "Retorna contratos que já venceram mas ainda estão ativos")
-    @ApiResponse(responseCode = "200", description = "Lista de contratos vencidos")
-    public ResponseEntity<List<Contrato>> listarContratosVencidos() {
-        List<Contrato> contratos = contratoService.listarContratosVencidos();
         return ResponseEntity.ok(contratos);
     }
 

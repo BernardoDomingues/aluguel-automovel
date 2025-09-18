@@ -27,24 +27,21 @@ public class Cliente extends Usuario {
     private String empregadores;
 
     @Column(columnDefinition = "TEXT")
-    private String rendimentos; // Até 3 rendimentos
+    private String rendimentos;
 
-    // Construtores
     public Cliente() {
         super();
     }
 
-    public Cliente(String nome, String email, String senha, String telefone, String endereco, String cpf,
-                  String rg, String profissao, String empregadores, String rendimentos, String observacoes) {
-        super(nome, email, senha, telefone, endereco, observacoes);
+    public Cliente(String nome, String email, String senha, String endereco, String cpf,
+                  String rg, String profissao, String empregadores, String rendimentos) {
+        super(nome, email, senha, endereco);
         this.cpf = cpf;
         this.rg = rg;
         this.profissao = profissao;
         this.empregadores = empregadores;
         this.rendimentos = rendimentos;
     }
-
-    // Getters e Setters específicos do Cliente
     public String getCpf() {
         return cpf;
     }

@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -47,62 +46,7 @@ public class UsuarioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/email/{email}")
-    @Operation(summary = "Buscar usuário por email", description = "Retorna um usuário específico pelo seu email")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Usuário encontrado"),
-        @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
-    })
-    public ResponseEntity<Usuario> buscarPorEmail(
-            @Parameter(description = "Email do usuário") @PathVariable String email) {
-        return usuarioService.buscarPorEmail(email)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
 
-    @GetMapping("/nome")
-    @Operation(summary = "Buscar usuários por nome", description = "Retorna usuários que contenham o nome especificado")
-    @ApiResponse(responseCode = "200", description = "Lista de usuários encontrados")
-    public ResponseEntity<List<Usuario>> buscarPorNome(
-            @Parameter(description = "Nome para busca") @RequestParam String nome) {
-        List<Usuario> usuarios = usuarioService.buscarPorNome(nome);
-        return ResponseEntity.ok(usuarios);
-    }
-
-    @GetMapping("/endereco")
-    @Operation(summary = "Buscar usuários por endereço", description = "Retorna usuários que contenham o endereço especificado")
-    @ApiResponse(responseCode = "200", description = "Lista de usuários encontrados")
-    public ResponseEntity<List<Usuario>> buscarPorEndereco(
-            @Parameter(description = "Endereço para busca") @RequestParam String endereco) {
-        List<Usuario> usuarios = usuarioService.buscarPorEndereco(endereco);
-        return ResponseEntity.ok(usuarios);
-    }
-
-    @GetMapping("/ativos")
-    @Operation(summary = "Listar usuários ativos", description = "Retorna uma lista com todos os usuários ativos")
-    @ApiResponse(responseCode = "200", description = "Lista de usuários ativos retornada com sucesso")
-    public ResponseEntity<List<Usuario>> listarAtivos() {
-        List<Usuario> usuarios = usuarioService.listarAtivos();
-        return ResponseEntity.ok(usuarios);
-    }
-
-    @GetMapping("/inativos")
-    @Operation(summary = "Listar usuários inativos", description = "Retorna uma lista com todos os usuários inativos")
-    @ApiResponse(responseCode = "200", description = "Lista de usuários inativos retornada com sucesso")
-    public ResponseEntity<List<Usuario>> listarInativos() {
-        List<Usuario> usuarios = usuarioService.listarInativos();
-        return ResponseEntity.ok(usuarios);
-    }
-
-    @GetMapping("/periodo-cadastro")
-    @Operation(summary = "Buscar usuários por período de cadastro", description = "Retorna usuários cadastrados em um período específico")
-    @ApiResponse(responseCode = "200", description = "Lista de usuários encontrados")
-    public ResponseEntity<List<Usuario>> buscarPorPeriodoCadastro(
-            @Parameter(description = "Data de início") @RequestParam LocalDateTime dataInicio,
-            @Parameter(description = "Data de fim") @RequestParam LocalDateTime dataFim) {
-        List<Usuario> usuarios = usuarioService.buscarPorPeriodoCadastro(dataInicio, dataFim);
-        return ResponseEntity.ok(usuarios);
-    }
 
     @PostMapping
     @Operation(summary = "Criar novo usuário", description = "Cadastra um novo usuário no sistema")
@@ -189,29 +133,4 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping("/estatisticas/contar-ativos")
-    @Operation(summary = "Contar usuários ativos", description = "Retorna o número total de usuários ativos")
-    @ApiResponse(responseCode = "200", description = "Contagem realizada com sucesso")
-    public ResponseEntity<Long> contarUsuariosAtivos() {
-        Long total = usuarioService.contarUsuariosAtivos();
-        return ResponseEntity.ok(total);
-    }
-
-    @GetMapping("/verificar-email/{email}")
-    @Operation(summary = "Verificar se email existe", description = "Verifica se um email já está cadastrado")
-    @ApiResponse(responseCode = "200", description = "Verificação realizada com sucesso")
-    public ResponseEntity<Boolean> verificarEmail(
-            @Parameter(description = "Email para verificar") @PathVariable String email) {
-        boolean existe = usuarioService.emailExiste(email);
-        return ResponseEntity.ok(existe);
-    }
-
-    @GetMapping("/verificar-telefone/{telefone}")
-    @Operation(summary = "Verificar se telefone existe", description = "Verifica se um telefone já está cadastrado")
-    @ApiResponse(responseCode = "200", description = "Verificação realizada com sucesso")
-    public ResponseEntity<Boolean> verificarTelefone(
-            @Parameter(description = "Telefone para verificar") @PathVariable String telefone) {
-        boolean existe = usuarioService.telefoneExiste(telefone);
-        return ResponseEntity.ok(existe);
-    }
 }

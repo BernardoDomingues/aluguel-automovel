@@ -3,7 +3,6 @@ package com.aluguel.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -32,10 +31,6 @@ public class Contrato {
     @Column(nullable = false)
     private LocalDate dataFim;
 
-    @NotNull(message = "Valor do aluguel é obrigatório")
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal valorAluguel;
-
     @Column(columnDefinition = "TEXT")
     private String observacoes;
 
@@ -47,25 +42,12 @@ public class Contrato {
     @Column(nullable = false)
     private TipoContrato tipoContrato = TipoContrato.ALUGUEL;
 
-    // Campos para análise financeira
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agente_analisador_id")
     private Agente agenteAnalisador;
 
     @Column(name = "parecer_financeiro", columnDefinition = "TEXT")
     private String parecerFinanceiro;
-
-    @Column(name = "score_credito")
-    private Integer scoreCredito;
-
-    @Column(name = "data_analise")
-    private LocalDate dataAnalise;
-
-    @Column(name = "observacoes_analise", columnDefinition = "TEXT")
-    private String observacoesAnalise;
-
-    @Column(name = "documentos_anexos", columnDefinition = "TEXT")
-    private String documentosAnexos;
 
     public enum StatusContrato {
         PENDENTE, APROVADO, REJEITADO, ATIVO, FINALIZADO, CANCELADO
@@ -75,23 +57,18 @@ public class Contrato {
         ALUGUEL, CREDITO
     }
 
-    // Construtores
     public Contrato() {}
 
-    public Contrato(Long id, Automovel automovel, Usuario usuario, LocalDate dataInicio, LocalDate dataFim, 
-                   BigDecimal valorAluguel, String observacoes, StatusContrato status, TipoContrato tipoContrato) {
-        this.id = id;
+    public Contrato(Automovel automovel, Usuario usuario, LocalDate dataInicio, LocalDate dataFim, 
+                   String observacoes, StatusContrato status, TipoContrato tipoContrato) {
         this.automovel = automovel;
         this.usuario = usuario;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
-        this.valorAluguel = valorAluguel;
         this.observacoes = observacoes;
         this.status = status;
         this.tipoContrato = tipoContrato;
     }
-
-    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -132,14 +109,6 @@ public class Contrato {
         this.dataFim = dataFim;
     }
 
-    public BigDecimal getValorAluguel() {
-        return valorAluguel;
-    }
-
-    public void setValorAluguel(BigDecimal valorAluguel) {
-        this.valorAluguel = valorAluguel;
-    }
-
     public String getObservacoes() {
         return observacoes;
     }
@@ -164,7 +133,6 @@ public class Contrato {
         this.tipoContrato = tipoContrato;
     }
 
-    // Getters e Setters para análise financeira
     public Agente getAgenteAnalisador() {
         return agenteAnalisador;
     }
@@ -179,37 +147,5 @@ public class Contrato {
 
     public void setParecerFinanceiro(String parecerFinanceiro) {
         this.parecerFinanceiro = parecerFinanceiro;
-    }
-
-    public Integer getScoreCredito() {
-        return scoreCredito;
-    }
-
-    public void setScoreCredito(Integer scoreCredito) {
-        this.scoreCredito = scoreCredito;
-    }
-
-    public LocalDate getDataAnalise() {
-        return dataAnalise;
-    }
-
-    public void setDataAnalise(LocalDate dataAnalise) {
-        this.dataAnalise = dataAnalise;
-    }
-
-    public String getObservacoesAnalise() {
-        return observacoesAnalise;
-    }
-
-    public void setObservacoesAnalise(String observacoesAnalise) {
-        this.observacoesAnalise = observacoesAnalise;
-    }
-
-    public String getDocumentosAnexos() {
-        return documentosAnexos;
-    }
-
-    public void setDocumentosAnexos(String documentosAnexos) {
-        this.documentosAnexos = documentosAnexos;
     }
 }

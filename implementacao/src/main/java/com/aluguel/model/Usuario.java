@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "usuarios")
@@ -29,10 +28,6 @@ public abstract class Usuario {
     @Column(nullable = false)
     private String senha;
 
-    @NotBlank(message = "Telefone é obrigatório")
-    @Column(nullable = false)
-    private String telefone;
-
     @NotBlank(message = "Endereço é obrigatório")
     @Column(nullable = false)
     private String endereco;
@@ -40,30 +35,15 @@ public abstract class Usuario {
     @Column(nullable = false)
     private Boolean ativo = true;
 
-    @Column(name = "data_cadastro", nullable = false)
-    private LocalDateTime dataCadastro = LocalDateTime.now();
-
-    @Column(name = "ultima_atualizacao")
-    private LocalDateTime ultimaAtualizacao;
-
-    @Column(columnDefinition = "TEXT")
-    private String observacoes;
-
-    // Construtores
     public Usuario() {}
 
-    public Usuario(String nome, String email, String senha, String telefone, String endereco, String observacoes) {
+    public Usuario(String nome, String email, String senha, String endereco) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
-        this.telefone = telefone;
         this.endereco = endereco;
-        this.observacoes = observacoes;
         this.ativo = true;
-        this.dataCadastro = LocalDateTime.now();
     }
-
-    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -96,14 +76,6 @@ public abstract class Usuario {
         this.senha = senha;
     }
 
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
     public String getEndereco() {
         return endereco;
     }
@@ -120,36 +92,5 @@ public abstract class Usuario {
         this.ativo = ativo;
     }
 
-    public LocalDateTime getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public void setDataCadastro(LocalDateTime dataCadastro) {
-        this.dataCadastro = dataCadastro;
-    }
-
-    public LocalDateTime getUltimaAtualizacao() {
-        return ultimaAtualizacao;
-    }
-
-    public void setUltimaAtualizacao(LocalDateTime ultimaAtualizacao) {
-        this.ultimaAtualizacao = ultimaAtualizacao;
-    }
-
-    public String getObservacoes() {
-        return observacoes;
-    }
-
-    public void setObservacoes(String observacoes) {
-        this.observacoes = observacoes;
-    }
-
-    // Método abstrato para obter o tipo de usuário
     public abstract String getTipoUsuario();
-
-    // Método para atualizar timestamp
-    @PreUpdate
-    public void preUpdate() {
-        this.ultimaAtualizacao = LocalDateTime.now();
-    }
 }

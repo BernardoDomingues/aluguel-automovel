@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Pattern;
 
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "automoveis")
@@ -38,14 +37,6 @@ public class Automovel {
     @Column(nullable = false, unique = true)
     private String placa;
 
-    @NotNull(message = "Valor do aluguel é obrigatório")
-    @Positive(message = "Valor do aluguel deve ser positivo")
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal valorAluguel;
-
-    @Column(columnDefinition = "TEXT")
-    private String descricao;
-
     @Column(nullable = false)
     private Boolean disponivel = true;
 
@@ -57,24 +48,17 @@ public class Automovel {
         CLIENTE, EMPRESA, BANCO
     }
 
-    // Construtores
     public Automovel() {}
 
-    public Automovel(Long id, String matricula, Integer ano, String marca, String modelo, String placa, 
-                    BigDecimal valorAluguel, String descricao, Boolean disponivel, TipoProprietario proprietario) {
-        this.id = id;
+    public Automovel(String matricula, Integer ano, String marca, String modelo, String placa, TipoProprietario proprietario) {
         this.matricula = matricula;
         this.ano = ano;
         this.marca = marca;
         this.modelo = modelo;
         this.placa = placa;
-        this.valorAluguel = valorAluguel;
-        this.descricao = descricao;
-        this.disponivel = disponivel;
         this.proprietario = proprietario;
+        this.disponivel = true;
     }
-
-    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -121,22 +105,6 @@ public class Automovel {
 
     public void setPlaca(String placa) {
         this.placa = placa;
-    }
-
-    public BigDecimal getValorAluguel() {
-        return valorAluguel;
-    }
-
-    public void setValorAluguel(BigDecimal valorAluguel) {
-        this.valorAluguel = valorAluguel;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
     }
 
     public Boolean getDisponivel() {

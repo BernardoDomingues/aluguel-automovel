@@ -1,7 +1,6 @@
 package com.aluguel.controller;
 
 import com.aluguel.model.Automovel;
-import com.aluguel.model.Automovel.TipoProprietario;
 import com.aluguel.service.AutomovelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -55,97 +54,6 @@ public class AutomovelController {
         return ResponseEntity.ok(automoveis);
     }
 
-    @GetMapping("/marca/{marca}")
-    @Operation(summary = "Buscar automóveis por marca", description = "Retorna automóveis filtrados por marca")
-    @ApiResponse(responseCode = "200", description = "Lista de automóveis da marca especificada")
-    public ResponseEntity<List<Automovel>> buscarPorMarca(
-            @Parameter(description = "Marca do automóvel") @PathVariable String marca) {
-        List<Automovel> automoveis = automovelService.buscarPorMarca(marca);
-        return ResponseEntity.ok(automoveis);
-    }
-
-    @GetMapping("/modelo/{modelo}")
-    @Operation(summary = "Buscar automóveis por modelo", description = "Retorna automóveis filtrados por modelo")
-    @ApiResponse(responseCode = "200", description = "Lista de automóveis do modelo especificado")
-    public ResponseEntity<List<Automovel>> buscarPorModelo(
-            @Parameter(description = "Modelo do automóvel") @PathVariable String modelo) {
-        List<Automovel> automoveis = automovelService.buscarPorModelo(modelo);
-        return ResponseEntity.ok(automoveis);
-    }
-
-    @GetMapping("/ano/{ano}")
-    @Operation(summary = "Buscar automóveis por ano", description = "Retorna automóveis filtrados por ano")
-    @ApiResponse(responseCode = "200", description = "Lista de automóveis do ano especificado")
-    public ResponseEntity<List<Automovel>> buscarPorAno(
-            @Parameter(description = "Ano do automóvel") @PathVariable Integer ano) {
-        List<Automovel> automoveis = automovelService.buscarPorAno(ano);
-        return ResponseEntity.ok(automoveis);
-    }
-
-    @GetMapping("/proprietario/{proprietario}")
-    @Operation(summary = "Buscar automóveis por proprietário", description = "Retorna automóveis filtrados por tipo de proprietário")
-    @ApiResponse(responseCode = "200", description = "Lista de automóveis do proprietário especificado")
-    public ResponseEntity<List<Automovel>> buscarPorProprietario(
-            @Parameter(description = "Tipo de proprietário") @PathVariable TipoProprietario proprietario) {
-        List<Automovel> automoveis = automovelService.buscarPorProprietario(proprietario);
-        return ResponseEntity.ok(automoveis);
-    }
-
-    @GetMapping("/faixa-preco")
-    @Operation(summary = "Buscar automóveis por faixa de preço", description = "Retorna automóveis dentro de uma faixa de preço específica")
-    @ApiResponse(responseCode = "200", description = "Lista de automóveis na faixa de preço especificada")
-    public ResponseEntity<List<Automovel>> buscarPorFaixaPreco(
-            @Parameter(description = "Valor mínimo do aluguel") @RequestParam Double valorMinimo,
-            @Parameter(description = "Valor máximo do aluguel") @RequestParam Double valorMaximo) {
-        List<Automovel> automoveis = automovelService.buscarPorFaixaPreco(valorMinimo, valorMaximo);
-        return ResponseEntity.ok(automoveis);
-    }
-
-    @GetMapping("/marca-modelo")
-    @Operation(summary = "Buscar automóveis por marca e modelo", description = "Retorna automóveis filtrados por marca e modelo")
-    @ApiResponse(responseCode = "200", description = "Lista de automóveis encontrados")
-    public ResponseEntity<List<Automovel>> buscarPorMarcaEModelo(
-            @Parameter(description = "Marca do automóvel") @RequestParam String marca,
-            @Parameter(description = "Modelo do automóvel") @RequestParam String modelo) {
-        List<Automovel> automoveis = automovelService.buscarPorMarcaEModelo(marca, modelo);
-        return ResponseEntity.ok(automoveis);
-    }
-
-    @GetMapping("/faixa-ano")
-    @Operation(summary = "Buscar automóveis por faixa de ano", description = "Retorna automóveis dentro de uma faixa de ano específica")
-    @ApiResponse(responseCode = "200", description = "Lista de automóveis na faixa de ano especificada")
-    public ResponseEntity<List<Automovel>> buscarPorFaixaAno(
-            @Parameter(description = "Ano inicial") @RequestParam Integer anoInicio,
-            @Parameter(description = "Ano final") @RequestParam Integer anoFim) {
-        List<Automovel> automoveis = automovelService.buscarPorFaixaAno(anoInicio, anoFim);
-        return ResponseEntity.ok(automoveis);
-    }
-
-    @GetMapping("/placa/{placa}")
-    @Operation(summary = "Buscar automóvel por placa", description = "Retorna um automóvel específico pela sua placa")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Automóvel encontrado"),
-        @ApiResponse(responseCode = "404", description = "Automóvel não encontrado")
-    })
-    public ResponseEntity<Automovel> buscarPorPlaca(
-            @Parameter(description = "Placa do automóvel") @PathVariable String placa) {
-        return automovelService.buscarPorPlaca(placa)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/matricula/{matricula}")
-    @Operation(summary = "Buscar automóvel por matrícula", description = "Retorna um automóvel específico pela sua matrícula")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Automóvel encontrado"),
-        @ApiResponse(responseCode = "404", description = "Automóvel não encontrado")
-    })
-    public ResponseEntity<Automovel> buscarPorMatricula(
-            @Parameter(description = "Matrícula do automóvel") @PathVariable String matricula) {
-        return automovelService.buscarPorMatricula(matricula)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
 
     @PostMapping
     @Operation(summary = "Criar novo automóvel", description = "Cadastra um novo automóvel no sistema")

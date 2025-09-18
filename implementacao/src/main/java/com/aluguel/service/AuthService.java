@@ -18,21 +18,17 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        // Buscar usuário por email
         Usuario usuario = usuarioService.buscarPorEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("Email ou senha inválidos"));
 
-        // Verificar se o usuário está ativo
         if (!usuario.getAtivo()) {
             throw new RuntimeException("Usuário inativo");
         }
 
-        // Verificar senha (comparação simples - em produção usar BCrypt)
         if (!usuario.getSenha().equals(loginRequest.getSenha())) {
             throw new RuntimeException("Email ou senha inválidos");
         }
 
-        // Gerar token simples (em produção usar JWT)
         String token = gerarToken(usuario);
 
         return new LoginResponse(
@@ -45,7 +41,6 @@ public class AuthService {
 
     public Usuario validarToken(String token) {
         try {
-            // Decodificar token simples
             String decodedToken = new String(Base64.getDecoder().decode(token));
             String[] parts = decodedToken.split(":");
             
@@ -62,7 +57,6 @@ public class AuthService {
     }
 
     private String gerarToken(Usuario usuario) {
-        // Token simples: base64(usuarioId:uuid)
         String tokenData = usuario.getId() + ":" + UUID.randomUUID().toString();
         return Base64.getEncoder().encodeToString(tokenData.getBytes());
     }

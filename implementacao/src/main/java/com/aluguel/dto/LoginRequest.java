@@ -10,7 +10,6 @@ public class LoginRequest {
     @NotBlank(message = "Senha é obrigatória")
     private String senha;
 
-    // Construtores
     public LoginRequest() {}
 
     public LoginRequest(String email, String senha) {
@@ -18,7 +17,6 @@ public class LoginRequest {
         this.senha = senha;
     }
 
-    // Getters e Setters
     public String getEmail() {
         return email;
     }

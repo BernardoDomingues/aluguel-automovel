@@ -54,7 +54,6 @@ public class AuthController {
     public ResponseEntity<Usuario> validateToken(
             @Parameter(description = "Token de autenticação") @RequestHeader("Authorization") String token) {
         try {
-            // Remover "Bearer " do token se presente
             if (token.startsWith("Bearer ")) {
                 token = token.substring(7);
             }
@@ -70,8 +69,6 @@ public class AuthController {
     @Operation(summary = "Fazer logout", description = "Encerra a sessão do usuário")
     @ApiResponse(responseCode = "200", description = "Logout realizado com sucesso")
     public ResponseEntity<String> logout() {
-        // Em um sistema básico, o logout é apenas informativo
-        // Em produção, o token seria invalidado no servidor
         return ResponseEntity.ok("Logout realizado com sucesso");
     }
 }

@@ -9,7 +9,6 @@ public class LoginResponse {
     private String tipoUsuario;
     private String mensagem;
 
-    // Construtores
     public LoginResponse() {}
 
     public LoginResponse(String token, Usuario usuario, String tipoUsuario, String mensagem) {
@@ -19,7 +18,6 @@ public class LoginResponse {
         this.mensagem = mensagem;
     }
 
-    // Getters e Setters
     public String getToken() {
         return token;
     }

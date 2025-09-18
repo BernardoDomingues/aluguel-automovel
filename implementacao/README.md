@@ -127,16 +127,8 @@ http://localhost:8080/h2-console
 
 ### 🚗 Automóveis
 - `GET /api/automoveis` - Listar todos os automóveis
+- `GET /api/automoveis/{id}` - Buscar por ID
 - `GET /api/automoveis/disponiveis` - Listar automóveis disponíveis
-- `GET /api/automoveis/marca/{marca}` - Buscar por marca
-- `GET /api/automoveis/modelo/{modelo}` - Buscar por modelo
-- `GET /api/automoveis/ano/{ano}` - Buscar por ano
-- `GET /api/automoveis/proprietario/{proprietario}` - Buscar por tipo de proprietário
-- `GET /api/automoveis/faixa-preco?valorMinimo=X&valorMaximo=Y` - Buscar por faixa de preço
-- `GET /api/automoveis/marca-modelo?marca=X&modelo=Y` - Buscar por marca e modelo
-- `GET /api/automoveis/faixa-ano?anoInicio=X&anoFim=Y` - Buscar por faixa de ano
-- `GET /api/automoveis/placa/{placa}` - Buscar por placa
-- `GET /api/automoveis/matricula/{matricula}` - Buscar por matrícula
 - `POST /api/automoveis` - Criar novo automóvel
 - `PUT /api/automoveis/{id}` - Atualizar automóvel
 - `DELETE /api/automoveis/{id}` - Excluir automóvel
@@ -147,11 +139,6 @@ http://localhost:8080/h2-console
 - `GET /api/clientes` - Listar todos os clientes
 - `GET /api/clientes/{id}` - Buscar por ID
 - `GET /api/clientes/cpf/{cpf}` - Buscar por CPF
-- `GET /api/clientes/rg/{rg}` - Buscar por RG
-- `GET /api/clientes/email/{email}` - Buscar por email
-- `GET /api/clientes/nome?nome=X` - Buscar por nome
-- `GET /api/clientes/profissao?profissao=X` - Buscar por profissão
-- `GET /api/clientes/endereco?endereco=X` - Buscar por endereço
 - `POST /api/clientes` - Criar novo cliente
 - `PUT /api/clientes/{id}` - Atualizar cliente
 - `DELETE /api/clientes/{id}` - Excluir cliente
@@ -160,12 +147,7 @@ http://localhost:8080/h2-console
 - `GET /api/contratos` - Listar todos os contratos
 - `GET /api/contratos/{id}` - Buscar por ID
 - `GET /api/contratos/status/{status}` - Listar por status (PENDENTE, APROVADO, REJEITADO, ATIVO, FINALIZADO, CANCELADO)
-- `GET /api/contratos/tipo/{tipoContrato}` - Listar por tipo (ALUGUEL, CREDITO)
-- `GET /api/contratos/automovel/{automovelId}` - Listar por automóvel
-- `GET /api/contratos/usuario/{usuarioId}` - Listar por usuário
 - `GET /api/contratos/pendentes` - Listar pedidos pendentes
-- `GET /api/contratos/ativos-na-data?data=YYYY-MM-DD` - Listar ativos em uma data
-- `GET /api/contratos/vencidos` - Listar contratos vencidos
 - `POST /api/contratos/pedido` - Criar pedido de aluguel
 - `PUT /api/contratos/{id}` - Atualizar contrato
 - `PATCH /api/contratos/{id}/aprovar` - Aprovar pedido
