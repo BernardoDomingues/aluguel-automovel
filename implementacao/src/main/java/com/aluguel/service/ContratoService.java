@@ -4,7 +4,7 @@ import com.aluguel.model.Contrato;
 import com.aluguel.model.Contrato.StatusContrato;
 import com.aluguel.model.Contrato.TipoContrato;
 import com.aluguel.model.Automovel;
-import com.aluguel.model.Cliente;
+import com.aluguel.model.Usuario;
 import com.aluguel.repository.ContratoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,12 +19,12 @@ public class ContratoService {
 
     private final ContratoRepository contratoRepository;
     private final AutomovelService automovelService;
-    private final ClienteService clienteService;
+    private final UsuarioService usuarioService;
 
-    public ContratoService(ContratoRepository contratoRepository, AutomovelService automovelService, ClienteService clienteService) {
+    public ContratoService(ContratoRepository contratoRepository, AutomovelService automovelService, UsuarioService usuarioService) {
         this.contratoRepository = contratoRepository;
         this.automovelService = automovelService;
-        this.clienteService = clienteService;
+        this.usuarioService = usuarioService;
     }
 
     public List<Contrato> listarTodos() {
@@ -39,57 +39,34 @@ public class ContratoService {
         return contratoRepository.findByStatus(status);
     }
 
-    public List<Contrato> listarPorTipoContrato(TipoContrato tipoContrato) {
-        return contratoRepository.findByTipoContrato(tipoContrato);
-    }
-
-    public List<Contrato> listarPorAutomovel(Long automovelId) {
-        return contratoRepository.findByAutomovelId(automovelId);
-    }
-
-    public List<Contrato> listarPorCliente(Long clienteId) {
-        return contratoRepository.findByClienteId(clienteId);
-    }
 
     public List<Contrato> listarPedidosPendentes() {
         return contratoRepository.findPedidosPendentes();
     }
 
-    public List<Contrato> listarContratosAtivosNaData(LocalDate data) {
-        return contratoRepository.findContratosAtivosNaData(data);
-    }
-
-    public List<Contrato> listarContratosVencidos() {
-        return contratoRepository.findContratosVencidos(LocalDate.now());
-    }
 
     public Contrato criarPedidoAluguel(Contrato contrato) {
-        // Validar se o automóvel existe
         Automovel automovel = automovelService.buscarPorId(contrato.getAutomovel().getId())
                 .orElseThrow(() -> new RuntimeException("Automóvel não encontrado com ID: " + contrato.getAutomovel().getId()));
 
-        // Validar se o cliente existe
-        Cliente cliente = clienteService.buscarPorId(contrato.getCliente().getId())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado com ID: " + contrato.getCliente().getId()));
+        Usuario usuario = usuarioService.buscarPorId(contrato.getUsuario().getId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com ID: " + contrato.getUsuario().getId()));
 
-        // Verificar se o automóvel está disponível
         if (!automovel.getDisponivel()) {
             throw new RuntimeException("Automóvel não está disponível para locação");
         }
 
-        // Verificar se há conflito de datas com contratos ativos
-        List<Contrato> contratosAtivos = contratoRepository.findContratosAtivosPorAutomovel(automovel.getId());
+        List<Contrato> contratosAtivos = contratoRepository.findByStatus(StatusContrato.ATIVO);
         for (Contrato contratoAtivo : contratosAtivos) {
-            if (datasConflitantes(contrato.getDataInicio(), contrato.getDataFim(),
+            if (contratoAtivo.getAutomovel().getId().equals(automovel.getId()) &&
+                datasConflitantes(contrato.getDataInicio(), contrato.getDataFim(),
                     contratoAtivo.getDataInicio(), contratoAtivo.getDataFim())) {
                 throw new RuntimeException("Já existe um contrato ativo para este automóvel no período especificado");
             }
         }
 
-        // Definir o valor do aluguel baseado no automóvel
-        contrato.setValorAluguel(automovel.getValorAluguel());
         contrato.setAutomovel(automovel);
-        contrato.setCliente(cliente);
+        contrato.setUsuario(usuario);
         contrato.setStatus(StatusContrato.PENDENTE);
         contrato.setTipoContrato(TipoContrato.ALUGUEL);
 
@@ -101,7 +78,6 @@ public class ContratoService {
                 .map(contrato -> {
                     contrato.setDataInicio(contratoAtualizado.getDataInicio());
                     contrato.setDataFim(contratoAtualizado.getDataFim());
-                    contrato.setValorAluguel(contratoAtualizado.getValorAluguel());
                     contrato.setObservacoes(contratoAtualizado.getObservacoes());
                     contrato.setStatus(contratoAtualizado.getStatus());
                     contrato.setTipoContrato(contratoAtualizado.getTipoContrato());
@@ -143,7 +119,6 @@ public class ContratoService {
                             contrato.setStatus(StatusContrato.ATIVO);
                             contratoRepository.save(contrato);
                             
-                            // Marcar automóvel como indisponível
                             automovelService.marcarComoIndisponivel(contrato.getAutomovel().getId());
                         },
                         () -> {
@@ -159,7 +134,6 @@ public class ContratoService {
                             contrato.setStatus(StatusContrato.FINALIZADO);
                             contratoRepository.save(contrato);
                             
-                            // Marcar automóvel como disponível novamente
                             automovelService.marcarComoDisponivel(contrato.getAutomovel().getId());
                         },
                         () -> {
@@ -175,7 +149,6 @@ public class ContratoService {
                             contrato.setStatus(StatusContrato.CANCELADO);
                             contratoRepository.save(contrato);
                             
-                            // Marcar automóvel como disponível novamente
                             automovelService.marcarComoDisponivel(contrato.getAutomovel().getId());
                         },
                         () -> {

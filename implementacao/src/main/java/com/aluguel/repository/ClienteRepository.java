@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -14,22 +13,17 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 
     Optional<Cliente> findByCpf(String cpf);
 
-    Optional<Cliente> findByEmail(String email);
-
     Optional<Cliente> findByRg(String rg);
 
-    @Query("SELECT c FROM Cliente c WHERE c.nome LIKE %:nome%")
-    List<Cliente> findByNomeContaining(@Param("nome") String nome);
+    Optional<Cliente> findByEmail(String email);
 
-    @Query("SELECT c FROM Cliente c WHERE c.profissao LIKE %:profissao%")
-    List<Cliente> findByProfissaoContaining(@Param("profissao") String profissao);
+    @Query("SELECT COUNT(c) > 0 FROM Cliente c WHERE c.cpf = :cpf AND c.id != :id")
+    boolean existsByCpfAndIdNot(@Param("cpf") String cpf, @Param("id") Long id);
 
-    @Query("SELECT c FROM Cliente c WHERE c.endereco LIKE %:endereco%")
-    List<Cliente> findByEnderecoContaining(@Param("endereco") String endereco);
+    @Query("SELECT COUNT(c) > 0 FROM Cliente c WHERE c.rg = :rg AND c.id != :id")
+    boolean existsByRgAndIdNot(@Param("rg") String rg, @Param("id") Long id);
 
-    boolean existsByCpf(String cpf);
+    @Query("SELECT COUNT(c) > 0 FROM Cliente c WHERE c.email = :email AND c.id != :id")
+    boolean existsByEmailAndIdNot(@Param("email") String email, @Param("id") Long id);
 
-    boolean existsByEmail(String email);
-
-    boolean existsByRg(String rg);
 }

@@ -59,58 +59,6 @@ public class ClienteController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/rg/{rg}")
-    @Operation(summary = "Buscar cliente por RG", description = "Retorna um cliente específico pelo seu RG")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Cliente encontrado"),
-        @ApiResponse(responseCode = "404", description = "Cliente não encontrado")
-    })
-    public ResponseEntity<Cliente> buscarPorRg(
-            @Parameter(description = "RG do cliente") @PathVariable String rg) {
-        return clienteService.buscarPorRg(rg)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/email/{email}")
-    @Operation(summary = "Buscar cliente por email", description = "Retorna um cliente específico pelo seu email")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Cliente encontrado"),
-        @ApiResponse(responseCode = "404", description = "Cliente não encontrado")
-    })
-    public ResponseEntity<Cliente> buscarPorEmail(
-            @Parameter(description = "Email do cliente") @PathVariable String email) {
-        return clienteService.buscarPorEmail(email)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @GetMapping("/nome")
-    @Operation(summary = "Buscar clientes por nome", description = "Retorna clientes que contenham o nome especificado")
-    @ApiResponse(responseCode = "200", description = "Lista de clientes encontrados")
-    public ResponseEntity<List<Cliente>> buscarPorNome(
-            @Parameter(description = "Nome para busca") @RequestParam String nome) {
-        List<Cliente> clientes = clienteService.buscarPorNome(nome);
-        return ResponseEntity.ok(clientes);
-    }
-
-    @GetMapping("/profissao")
-    @Operation(summary = "Buscar clientes por profissão", description = "Retorna clientes que contenham a profissão especificada")
-    @ApiResponse(responseCode = "200", description = "Lista de clientes encontrados")
-    public ResponseEntity<List<Cliente>> buscarPorProfissao(
-            @Parameter(description = "Profissão para busca") @RequestParam String profissao) {
-        List<Cliente> clientes = clienteService.buscarPorProfissao(profissao);
-        return ResponseEntity.ok(clientes);
-    }
-
-    @GetMapping("/endereco")
-    @Operation(summary = "Buscar clientes por endereço", description = "Retorna clientes que contenham o endereço especificado")
-    @ApiResponse(responseCode = "200", description = "Lista de clientes encontrados")
-    public ResponseEntity<List<Cliente>> buscarPorEndereco(
-            @Parameter(description = "Endereço para busca") @RequestParam String endereco) {
-        List<Cliente> clientes = clienteService.buscarPorEndereco(endereco);
-        return ResponseEntity.ok(clientes);
-    }
 
     @PostMapping
     @Operation(summary = "Criar novo cliente", description = "Cadastra um novo cliente no sistema")

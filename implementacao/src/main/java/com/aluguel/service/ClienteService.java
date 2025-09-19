@@ -38,33 +38,38 @@ public class ClienteService {
         return clienteRepository.findByRg(rg);
     }
 
-    public List<Cliente> buscarPorNome(String nome) {
-        return clienteRepository.findByNomeContaining(nome);
-    }
-
-    public List<Cliente> buscarPorProfissao(String profissao) {
-        return clienteRepository.findByProfissaoContaining(profissao);
-    }
-
-    public List<Cliente> buscarPorEndereco(String endereco) {
-        return clienteRepository.findByEnderecoContaining(endereco);
-    }
 
     public Cliente salvar(Cliente cliente) {
-        // Verificar se CPF já existe
-        if (clienteRepository.existsByCpf(cliente.getCpf())) {
-            throw new RuntimeException("CPF já cadastrado: " + cliente.getCpf());
+        if (cliente.getId() == null) {
+            if (clienteRepository.findByCpf(cliente.getCpf()).isPresent()) {
+                throw new RuntimeException("CPF já cadastrado: " + cliente.getCpf());
+            }
+        } else {
+            if (clienteRepository.existsByCpfAndIdNot(cliente.getCpf(), cliente.getId())) {
+                throw new RuntimeException("CPF já cadastrado: " + cliente.getCpf());
+            }
         }
 
-        // Verificar se email já existe
-        if (clienteRepository.existsByEmail(cliente.getEmail())) {
-            throw new RuntimeException("Email já cadastrado: " + cliente.getEmail());
+        if (cliente.getId() == null) {
+            if (clienteRepository.findByRg(cliente.getRg()).isPresent()) {
+                throw new RuntimeException("RG já cadastrado: " + cliente.getRg());
+            }
+        } else {
+            if (clienteRepository.existsByRgAndIdNot(cliente.getRg(), cliente.getId())) {
+                throw new RuntimeException("RG já cadastrado: " + cliente.getRg());
+            }
         }
 
-        // Verificar se RG já existe
-        if (clienteRepository.existsByRg(cliente.getRg())) {
-            throw new RuntimeException("RG já cadastrado: " + cliente.getRg());
+        if (cliente.getId() == null) {
+            if (clienteRepository.findByEmail(cliente.getEmail()).isPresent()) {
+                throw new RuntimeException("Email já cadastrado: " + cliente.getEmail());
+            }
+        } else {
+            if (clienteRepository.existsByEmailAndIdNot(cliente.getEmail(), cliente.getId())) {
+                throw new RuntimeException("Email já cadastrado: " + cliente.getEmail());
+            }
         }
+
 
         return clienteRepository.save(cliente);
     }
@@ -72,21 +77,18 @@ public class ClienteService {
     public Cliente atualizar(Long id, Cliente clienteAtualizado) {
         return clienteRepository.findById(id)
                 .map(cliente -> {
-                    // Verificar se o novo CPF já existe em outro cliente
                     if (!cliente.getCpf().equals(clienteAtualizado.getCpf()) &&
-                        clienteRepository.existsByCpf(clienteAtualizado.getCpf())) {
+                        clienteRepository.existsByCpfAndIdNot(clienteAtualizado.getCpf(), id)) {
                         throw new RuntimeException("CPF já cadastrado: " + clienteAtualizado.getCpf());
                     }
 
-                    // Verificar se o novo email já existe em outro cliente
                     if (!cliente.getEmail().equals(clienteAtualizado.getEmail()) &&
-                        clienteRepository.existsByEmail(clienteAtualizado.getEmail())) {
+                        clienteRepository.existsByEmailAndIdNot(clienteAtualizado.getEmail(), id)) {
                         throw new RuntimeException("Email já cadastrado: " + clienteAtualizado.getEmail());
                     }
 
-                    // Verificar se o novo RG já existe em outro cliente
                     if (!cliente.getRg().equals(clienteAtualizado.getRg()) &&
-                        clienteRepository.existsByRg(clienteAtualizado.getRg())) {
+                        clienteRepository.existsByRgAndIdNot(clienteAtualizado.getRg(), id)) {
                         throw new RuntimeException("RG já cadastrado: " + clienteAtualizado.getRg());
                     }
 
@@ -95,11 +97,9 @@ public class ClienteService {
                     cliente.setRg(clienteAtualizado.getRg());
                     cliente.setEndereco(clienteAtualizado.getEndereco());
                     cliente.setEmail(clienteAtualizado.getEmail());
-                    cliente.setTelefone(clienteAtualizado.getTelefone());
                     cliente.setProfissao(clienteAtualizado.getProfissao());
                     cliente.setEmpregadores(clienteAtualizado.getEmpregadores());
                     cliente.setRendimentos(clienteAtualizado.getRendimentos());
-                    cliente.setObservacoes(clienteAtualizado.getObservacoes());
                     return clienteRepository.save(cliente);
                 })
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado com ID: " + id));

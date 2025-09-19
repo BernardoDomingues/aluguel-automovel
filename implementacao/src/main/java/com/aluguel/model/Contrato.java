@@ -3,7 +3,6 @@ package com.aluguel.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -20,9 +19,9 @@ public class Contrato {
     private Automovel automovel;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id", nullable = false)
-    @NotNull(message = "Cliente é obrigatório")
-    private Cliente cliente;
+    @JoinColumn(name = "usuario_id", nullable = false)
+    @NotNull(message = "Usuário é obrigatório")
+    private Usuario usuario;
 
     @NotNull(message = "Data de início é obrigatória")
     @Column(nullable = false)
@@ -31,10 +30,6 @@ public class Contrato {
     @NotNull(message = "Data de fim é obrigatória")
     @Column(nullable = false)
     private LocalDate dataFim;
-
-    @NotNull(message = "Valor do aluguel é obrigatório")
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal valorAluguel;
 
     @Column(columnDefinition = "TEXT")
     private String observacoes;
@@ -47,6 +42,13 @@ public class Contrato {
     @Column(nullable = false)
     private TipoContrato tipoContrato = TipoContrato.ALUGUEL;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agente_analisador_id")
+    private Agente agenteAnalisador;
+
+    @Column(name = "parecer_financeiro", columnDefinition = "TEXT")
+    private String parecerFinanceiro;
+
     public enum StatusContrato {
         PENDENTE, APROVADO, REJEITADO, ATIVO, FINALIZADO, CANCELADO
     }
@@ -55,23 +57,18 @@ public class Contrato {
         ALUGUEL, CREDITO
     }
 
-    // Construtores
     public Contrato() {}
 
-    public Contrato(Long id, Automovel automovel, Cliente cliente, LocalDate dataInicio, LocalDate dataFim, 
-                   BigDecimal valorAluguel, String observacoes, StatusContrato status, TipoContrato tipoContrato) {
-        this.id = id;
+    public Contrato(Automovel automovel, Usuario usuario, LocalDate dataInicio, LocalDate dataFim, 
+                   String observacoes, StatusContrato status, TipoContrato tipoContrato) {
         this.automovel = automovel;
-        this.cliente = cliente;
+        this.usuario = usuario;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
-        this.valorAluguel = valorAluguel;
         this.observacoes = observacoes;
         this.status = status;
         this.tipoContrato = tipoContrato;
     }
-
-    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -88,12 +85,12 @@ public class Contrato {
         this.automovel = automovel;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     public LocalDate getDataInicio() {
@@ -110,14 +107,6 @@ public class Contrato {
 
     public void setDataFim(LocalDate dataFim) {
         this.dataFim = dataFim;
-    }
-
-    public BigDecimal getValorAluguel() {
-        return valorAluguel;
-    }
-
-    public void setValorAluguel(BigDecimal valorAluguel) {
-        this.valorAluguel = valorAluguel;
     }
 
     public String getObservacoes() {
@@ -142,5 +131,21 @@ public class Contrato {
 
     public void setTipoContrato(TipoContrato tipoContrato) {
         this.tipoContrato = tipoContrato;
+    }
+
+    public Agente getAgenteAnalisador() {
+        return agenteAnalisador;
+    }
+
+    public void setAgenteAnalisador(Agente agenteAnalisador) {
+        this.agenteAnalisador = agenteAnalisador;
+    }
+
+    public String getParecerFinanceiro() {
+        return parecerFinanceiro;
+    }
+
+    public void setParecerFinanceiro(String parecerFinanceiro) {
+        this.parecerFinanceiro = parecerFinanceiro;
     }
 }
