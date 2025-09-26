@@ -2,15 +2,20 @@ package com.aluguel.service;
 
 import com.aluguel.model.Usuario;
 import com.aluguel.repository.UsuarioRepository;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
-public class UsuarioService {
+public class UsuarioService implements UserDetailsService {
 
     private final UsuarioRepository usuarioRepository;
 
@@ -89,6 +94,18 @@ public class UsuarioService {
             throw new RuntimeException("Usuário não encontrado com ID: " + id);
         }
         usuarioRepository.deleteById(id);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com email: " + email));
+        
+        return User.builder()
+                .username(usuario.getEmail())
+                .password(usuario.getSenha())
+                .authorities(new ArrayList<>())
+                .build();
     }
 
 }

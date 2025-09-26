@@ -1,20 +1,22 @@
 package com.aluguel.service;
 
+import com.aluguel.config.JwtUtil;
 import com.aluguel.dto.LoginRequest;
 import com.aluguel.dto.LoginResponse;
 import com.aluguel.model.Usuario;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Base64;
-import java.util.UUID;
 
 @Service
 public class AuthService {
 
     private final UsuarioService usuarioService;
+    private final JwtUtil jwtUtil;
 
-    public AuthService(UsuarioService usuarioService) {
+    @Autowired
+    public AuthService(UsuarioService usuarioService, JwtUtil jwtUtil) {
         this.usuarioService = usuarioService;
+        this.jwtUtil = jwtUtil;
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
@@ -29,7 +31,7 @@ public class AuthService {
             throw new RuntimeException("Email ou senha inválidos");
         }
 
-        String token = gerarToken(usuario);
+        String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getId(), usuario.getTipoUsuario());
 
         return new LoginResponse(
                 token,
@@ -41,23 +43,17 @@ public class AuthService {
 
     public Usuario validarToken(String token) {
         try {
-            String decodedToken = new String(Base64.getDecoder().decode(token));
-            String[] parts = decodedToken.split(":");
+            String email = jwtUtil.extractUsername(token);
+            Long usuarioId = jwtUtil.extractUserId(token);
             
-            if (parts.length != 2) {
+            if (jwtUtil.validateToken(token, email)) {
+                return usuarioService.buscarPorId(usuarioId)
+                        .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+            } else {
                 throw new RuntimeException("Token inválido");
             }
-
-            Long usuarioId = Long.parseLong(parts[0]);
-            return usuarioService.buscarPorId(usuarioId)
-                    .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         } catch (Exception e) {
             throw new RuntimeException("Token inválido");
         }
-    }
-
-    private String gerarToken(Usuario usuario) {
-        String tokenData = usuario.getId() + ":" + UUID.randomUUID().toString();
-        return Base64.getEncoder().encodeToString(tokenData.getBytes());
     }
 }

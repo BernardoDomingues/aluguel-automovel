@@ -1,5 +1,7 @@
 package com.aluguel.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
@@ -9,6 +11,11 @@ import jakarta.validation.constraints.NotBlank;
 @PrimaryKeyJoinColumn(name = "usuario_id")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "tipo_agente", discriminatorType = DiscriminatorType.STRING)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "tipoAgente")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = AgenteEmpresa.class, name = "AGENTE_EMPRESA"),
+    @JsonSubTypes.Type(value = AgenteBanco.class, name = "AGENTE_BANCO")
+})
 public abstract class Agente extends Usuario {
 
     @NotBlank(message = "CNPJ é obrigatório")
